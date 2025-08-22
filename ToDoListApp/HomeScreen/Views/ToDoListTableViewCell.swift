@@ -36,7 +36,6 @@ class ToDoListTableViewCell: UITableViewCell {
     }
 
     func configureCell(with todo: ToDoEntity) {
-//        titleLabel.text = todo.title
         if let title = todo.title {
             let attributes: [NSAttributedString.Key: Any] = todo.completed
             ? [.strikethroughStyle: NSUnderlineStyle.single.rawValue,

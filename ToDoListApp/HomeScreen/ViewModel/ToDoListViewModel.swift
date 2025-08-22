@@ -68,7 +68,7 @@ class ToDoListViewModel {
                             self?.reloadTableView?()
                         }
                     } catch {
-                        print("CoreData save/fetch error: \(error)")
+                        print("CoreData save error: \(error)")
                     }
                 }
             case .failure(let error):
@@ -175,7 +175,6 @@ class ToDoListViewModel {
     }
 
     func editTask(todo: ToDoEntity, title: String, desc: String, completion: @escaping (Bool) -> Void) {
-//        let todo = filteredTasks[indexPath.row]
         if todo.completed {
             completion(false)
             return

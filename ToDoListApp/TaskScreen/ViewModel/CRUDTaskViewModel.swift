@@ -19,7 +19,6 @@ class CRUDTaskViewModel {
     }
 
     func addTask(title: String, desc: String?, completion: @escaping (Result<ToDoEntity, Error>) -> Void) {
-        //        localDataSource.createTask(title: title, desc: desc, completion: completion)
         localDataSource.createTask(title: title, desc: desc) { [weak self] result in
             switch result {
             case .success(let task):
