@@ -29,4 +29,9 @@ extension RemoteTodo {
     }
 }
 
+struct RemoteTodoResponse: Decodable {
+    let todos: [RemoteTodo]
+}
+
+
 

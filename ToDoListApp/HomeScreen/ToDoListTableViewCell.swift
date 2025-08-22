@@ -17,6 +17,7 @@ class ToDoListTableViewCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setUpfunc()
 
     }
     
@@ -43,6 +44,13 @@ class ToDoListTableViewCell: UITableViewCell {
         }
         let imageName = todo.completed ? "checkmark.circle.fill" : "circle"
         checkView.setImage(UIImage(systemName: imageName), for: .normal)
+    }
+
+    private func setUpfunc() {
+        setupCheckView()
+        setupTitle()
+        setupDescLabel()
+        setupDateLabel()
     }
 
     private func setupCheckView() {
