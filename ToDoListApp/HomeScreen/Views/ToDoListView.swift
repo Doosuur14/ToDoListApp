@@ -37,6 +37,11 @@ final class ToDoListView: UIView, UIGestureRecognizerDelegate {
             make.trailing.equalTo(-10)
             make.height.equalTo(35)
         }
+        DispatchQueue.main.async {
+            if let cancelButton = self.searchBar.value(forKey: "cancelButton") as? UIButton {
+                cancelButton.setTitleColor(.systemYellow, for: .normal)
+            }
+        }
     }
 
     private func setupTableView() {

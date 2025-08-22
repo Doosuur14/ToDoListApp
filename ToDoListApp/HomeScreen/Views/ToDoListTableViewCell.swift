@@ -15,6 +15,7 @@ class ToDoListTableViewCell: UITableViewCell {
     private lazy var descLabel: UILabel = UILabel()
     private lazy var dateLabel: UILabel = UILabel()
     var onToggleCompleted: (() -> Void)?
+    var onLongPress: ((IndexPath) -> Void)?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -22,6 +23,10 @@ class ToDoListTableViewCell: UITableViewCell {
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapCell))
         addGestureRecognizer(tapGesture)
+        isUserInteractionEnabled = true
+
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(didLongPress))
+        addGestureRecognizer(longPress)
         isUserInteractionEnabled = true
 
     }
@@ -55,8 +60,9 @@ class ToDoListTableViewCell: UITableViewCell {
         } else {
             dateLabel.text = "No date"
         }
-        let imageName = todo.completed ? "checkmark.circle.fill" : "circle"
+        let imageName = todo.completed ? "checkmark.circle" : "circle"
         checkView.setImage(UIImage(systemName: imageName)?.withRenderingMode(.alwaysTemplate), for: .normal)
+        checkView.tintColor = todo.completed ? .systemYellow : .systemGray4
 
     }
 
@@ -72,7 +78,6 @@ class ToDoListTableViewCell: UITableViewCell {
         checkView.isUserInteractionEnabled = true
         checkView.setImage(UIImage(systemName: "circle"), for: .normal)
         checkView.tintColor = .systemYellow
-//        checkView.addTarget(self, action: #selector(didTapCheck), for: .touchUpInside)
         checkView.snp.makeConstraints { make in
             make.leading.equalToSuperview().inset(16)
             make.centerY.equalToSuperview()
@@ -83,6 +88,19 @@ class ToDoListTableViewCell: UITableViewCell {
     @objc private func didTapCell() {
         print("Tapped cell with title: \(titleLabel.text ?? "none")")
         onToggleCompleted?()
+    }
+
+    @objc private func didLongPress(_ gesture: UILongPressGestureRecognizer) {
+        if gesture.state == .began {
+            if let indexPath = indexPathInTableView() {
+                onLongPress?(indexPath)
+            }
+        }
+    }
+
+    private func indexPathInTableView() -> IndexPath? {
+        guard let tableView = superview as? UITableView else { return nil }
+        return tableView.indexPath(for: self)
     }
 
     private func setupTitle() {

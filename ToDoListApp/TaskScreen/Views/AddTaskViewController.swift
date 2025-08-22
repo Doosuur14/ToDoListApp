@@ -7,16 +7,10 @@
 
 import UIKit
 
-
-//protocol CRUDTaskViewControllerDelegate: AnyObject {
-//    func didCreateTask(_ task: ToDoEntity)
-//}
-
 class AddTaskViewController: UIViewController {
 
     var addTaskView: AddTaskView?
     let viewModel: CRUDTaskViewModel
-//    weak var delegate: CRUDTaskViewControllerDelegate?
 
     init(viewModel: CRUDTaskViewModel) {
         self.viewModel = viewModel
@@ -69,20 +63,14 @@ class AddTaskViewController: UIViewController {
         viewModel.addTask(title: title, desc: desc) { [weak self] result in
             switch result {
             case .success(let task):
-                print("✅ Task saved: \(task.title ?? "")")
-//                self?.delegate?.didCreateTask(task)
+                print("Task saved: \(task.title ?? "")")
                 self?.dismiss(animated: true)
                 DispatchQueue.main.async {
-//                    self?.delegate?.didCreateTask(task)
                     self?.navigationController?.popViewController(animated: true) 
                 }
             case .failure(let error):
-                print("❌ Failed to save: \(error)")
+                print("Failed to save: \(error)")
             }
         }
     }
-//    func didCreateTask(_ task: ToDoEntity) {
-//
-//    }
-
 }

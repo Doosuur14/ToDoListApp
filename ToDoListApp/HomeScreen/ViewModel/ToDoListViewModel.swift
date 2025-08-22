@@ -68,26 +68,25 @@ class ToDoListViewModel {
                             self?.reloadTableView?()
                         }
                     } catch {
-                        print("❌ CoreData save/fetch error: \(error)")
+                        print("CoreData save/fetch error: \(error)")
                     }
                 }
             case .failure(let error):
-                print("❌ API error: \(error)")
+                print("API error: \(error)")
             }
         }
     }
 
     func toggleCompleted(at indexPath: IndexPath) {
         let todo = filteredTasks[indexPath.row]
-//        todo.completed.toggle()
         todo.completed = true
 
         let context = CoreDataManager.shared.viewContext
         do {
             try context.save()
-            reloadTableView?() 
+            reloadTableView?()
         } catch {
-            print("❌ Failed to save toggle: \(error)")
+            print("Failed to save toggle: \(error)")
         }
     }
 
@@ -120,7 +119,7 @@ class ToDoListViewModel {
         do {
             let savedTodos = try context.fetch(request)
             if savedTodos.isEmpty {
-               setupMockData()
+                setupMockData()
             } else {
                 self.task = savedTodos
                 self.filteredTasks = savedTodos
@@ -129,7 +128,7 @@ class ToDoListViewModel {
                 }
             }
         } catch {
-            print("❌ CoreData fetch error: \(error)")
+            print("CoreData fetch error: \(error)")
         }
     }
 
@@ -155,6 +154,48 @@ class ToDoListViewModel {
             case .failure(let error):
                 print("Failed to fetch tasks: \(error)")
                 completion()
+            }
+        }
+    }
+
+    func deleteTask(at indexPath: IndexPath) {
+        let todo = filteredTasks[indexPath.row]
+        localDataSource.deleteTask(todo) { [weak self] result in
+            switch result {
+            case .success:
+                self?.task.removeAll { $0 == todo }
+                self?.filteredTasks.removeAll { $0 == todo }
+                DispatchQueue.main.async {
+                    self?.reloadTableView?()
+                }
+            case .failure(let error):
+                print("Failed to delete task: \(error)")
+            }
+        }
+    }
+
+    func editTask(todo: ToDoEntity, title: String, desc: String, completion: @escaping (Bool) -> Void) {
+//        let todo = filteredTasks[indexPath.row]
+        if todo.completed {
+            completion(false)
+            return
+        }
+        localDataSource.editTask(todo, title: title, desc: desc) { [weak self] result in
+            switch result {
+            case .success(let updatedTask):
+                if let index = self?.task.firstIndex(where: { $0 == todo }) {
+                    self?.task[index] = updatedTask
+                }
+                if let index = self?.filteredTasks.firstIndex(where: { $0 == todo }) {
+                    self?.filteredTasks[index] = updatedTask
+                }
+                DispatchQueue.main.async {
+                    self?.reloadTableView?()
+                    completion(true)
+                }
+            case .failure(let error):
+                print("Failed to edit task: \(error)")
+                completion(false)
             }
         }
     }

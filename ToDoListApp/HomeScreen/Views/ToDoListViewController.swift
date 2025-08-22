@@ -8,10 +8,10 @@
 import UIKit
 
 class ToDoListViewController: UIViewController, UITableViewDataSource,
-                              UITableViewDelegate, UISearchBarDelegate{
-
+                              UITableViewDelegate, UISearchBarDelegate, EditTaskViewControllerDelegate{
 
     var toDoView: ToDoListView?
+    var addtaskView: AddTaskView?
     let viewModel: ToDoListViewModel
 
 
@@ -95,4 +95,39 @@ class ToDoListViewController: UIViewController, UITableViewDataSource,
         toDoView?.tableView.insertRows(at: [IndexPath(row: viewModel.task.count - 1, section: 0)], with: .none)
     }
 
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ in
+            let delete = UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { [weak self] _ in
+                self?.viewModel.deleteTask(at: indexPath)
+            }
+            let edit = UIAction(title: "Edit", image: UIImage(systemName: "pencil")) { [weak self] _ in
+                guard let self = self else { return }
+                let todo = self.viewModel.filteredTasks[indexPath.row]
+                let editVC = EditTaskViewController(viewModel: self.viewModel, todo: todo)
+                editVC.delegate = self
+                self.navigationController?.pushViewController(editVC, animated: true)
+            }
+            return UIMenu(title: "", children: [edit, delete])
+        }
+    }
+
+    
+    private func navigateToEdit(at indexPath: IndexPath) {
+        let todo = viewModel.filteredTasks[indexPath.row]
+        let editVC = EditTaskViewController(viewModel: viewModel, todo: todo)
+        editVC.delegate = self
+        navigationController?.pushViewController(editVC, animated: true)
+    }
+
+    private func showAlert(message: String) {
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+
+    func didUpdateTask(_ task: ToDoEntity?) {
+        viewModel.fetchTasks { [weak self] in
+            self?.toDoView?.tableView.reloadData()
+        }
+    }
 }

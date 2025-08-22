@@ -11,6 +11,8 @@ import CoreData
 protocol LocalDataSourceProtocol {
     func createTask(title: String, desc: String?, completion: @escaping (Result<ToDoEntity, Error>) -> Void)
     func fetchTasks(completion: @escaping (Result<[ToDoEntity], Error>) -> Void)
+    func deleteTask(_ task: ToDoEntity, completion: @escaping (Result<Void, Error>) -> Void)
+    func editTask(_ task: ToDoEntity, title: String, desc: String?, completion: @escaping (Result<ToDoEntity, Error>) -> Void)
 
 }
 
@@ -42,6 +44,30 @@ class LocalDataSource: LocalDataSourceProtocol {
         do {
             let tasks = try context.fetch(request)
             completion(.success(tasks))
+        } catch {
+            completion(.failure(error))
+        }
+    }
+
+    func deleteTask(_ task: ToDoEntity, completion: @escaping (Result<Void, any Error>) -> Void) {
+        let context = CoreDataManager.shared.viewContext
+        context.delete(task)
+        do {
+            try context.save()
+            completion(.success(()))
+        } catch {
+            completion(.failure(error))
+        }
+    }
+    
+
+    func editTask(_ task: ToDoEntity, title: String, desc: String?, completion: @escaping (Result<ToDoEntity, any Error>) -> Void) {
+        let context = CoreDataManager.shared.viewContext
+        task.title = title
+        task.desc = desc
+        do {
+            try context.save()
+            completion(.success(task))
         } catch {
             completion(.failure(error))
         }
