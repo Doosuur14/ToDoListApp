@@ -10,14 +10,16 @@ import UIKit
 import CoreData
 
 class ToDoListViewModel {
-    var task: [ToDoEntity] = []
+    @Published var task: [ToDoEntity] = []
     var filteredTasks: [ToDoEntity] = []
     var remoteDataSource: RemoteDataSourceProtocol
+    var localDataSource: LocalDataSourceProtocol
     var reloadTableView: (() -> Void)?
 
-    init(remoteDataSource: RemoteDataSourceProtocol = RemoteDataSource.shared) {
+    init(remoteDataSource: RemoteDataSourceProtocol = RemoteDataSource.shared, localDataSource: LocalDataSourceProtocol = LocalDataSource.shared) {
         self.remoteDataSource = remoteDataSource
-        setupMockData()
+        self.localDataSource = localDataSource
+        loadInitialData()
     }
 
 
@@ -75,6 +77,20 @@ class ToDoListViewModel {
         }
     }
 
+    func toggleCompleted(at indexPath: IndexPath) {
+        let todo = filteredTasks[indexPath.row]
+//        todo.completed.toggle()
+        todo.completed = true
+
+        let context = CoreDataManager.shared.viewContext
+        do {
+            try context.save()
+            reloadTableView?() 
+        } catch {
+            print("❌ Failed to save toggle: \(error)")
+        }
+    }
+
 
     func configureCell(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ToDoListTableViewCell.reuseIdentifier, for: indexPath)
@@ -86,9 +102,60 @@ class ToDoListViewModel {
         } else {
             tasks = filteredTasks[indexPath.row]
         }
+
         cell.tag = indexPath.row
         cell.configureCell(with: tasks)
+        cell.onToggleCompleted = { [weak self] in
+            print("onToggleCompleted called for indexPath: \(indexPath)")
+            self?.toggleCompleted(at: indexPath)
+        }
         return cell
     }
 
+
+    private func loadInitialData() {
+        let context = CoreDataManager.shared.viewContext
+        let request: NSFetchRequest<ToDoEntity> = ToDoEntity.fetchRequest()
+
+        do {
+            let savedTodos = try context.fetch(request)
+            if savedTodos.isEmpty {
+               setupMockData()
+            } else {
+                self.task = savedTodos
+                self.filteredTasks = savedTodos
+                DispatchQueue.main.async {
+                    self.reloadTableView?()
+                }
+            }
+        } catch {
+            print("❌ CoreData fetch error: \(error)")
+        }
+    }
+
+    func addTask(title: String, desc: String?, completion: @escaping (Result<ToDoEntity, Error>) -> Void) {
+        localDataSource.createTask(title: title, desc: desc) { [weak self] result in
+            switch result {
+            case .success(let task):
+                self?.task.append(task)
+                completion(.success(task))
+            case .failure(let error):
+                print("Failed to create task: \(error)")
+                completion(.failure(error))
+            }
+        }
+    }
+
+    func fetchTasks(completion: @escaping () -> Void) {
+        localDataSource.fetchTasks { [weak self] result in
+            switch result {
+            case .success(let fetchedTasks):
+                self?.task = fetchedTasks
+                completion()
+            case .failure(let error):
+                print("Failed to fetch tasks: \(error)")
+                completion()
+            }
+        }
+    }
 }

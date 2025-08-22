@@ -8,7 +8,8 @@
 import UIKit
 
 class ToDoListViewController: UIViewController, UITableViewDataSource,
-                              UITableViewDelegate, UISearchBarDelegate {
+                              UITableViewDelegate, UISearchBarDelegate{
+
 
     var toDoView: ToDoListView?
     let viewModel: ToDoListViewModel
@@ -33,6 +34,17 @@ class ToDoListViewController: UIViewController, UITableViewDataSource,
             }
         }
     }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        viewModel.fetchTasks { [weak self] in
+            DispatchQueue.main.async {
+                self?.toDoView?.tableView.reloadData()
+            }
+        }
+
+    }
+
 
     private func setupView() {
         toDoView = ToDoListView(frame: view.bounds)
@@ -77,5 +89,10 @@ class ToDoListViewController: UIViewController, UITableViewDataSource,
         viewModel.cancelButtonClicked()
     }
 
+    func didCreateTask(_ tasktodo: ToDoEntity) {
+        viewModel.task.append(tasktodo)
+        viewModel.filteredTasks.append(tasktodo)
+        toDoView?.tableView.insertRows(at: [IndexPath(row: viewModel.task.count - 1, section: 0)], with: .none)
+    }
 
 }

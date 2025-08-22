@@ -15,16 +15,16 @@ final class ToDoListView: UIView, UIGestureRecognizerDelegate {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setUpSearchBar()
-        setUpTableView()
-        setUpLabel()
+        setupSearchBar()
+        setupTableView()
+        setupLabel()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func setUpSearchBar() {
+    private func setupSearchBar() {
         addSubview(searchBar)
         searchBar.placeholder = "Search"
         searchBar.searchBarStyle = .minimal
@@ -39,7 +39,7 @@ final class ToDoListView: UIView, UIGestureRecognizerDelegate {
         }
     }
 
-    private func setUpTableView() {
+    private func setupTableView() {
         addSubview(tableView)
         tableView.snp.makeConstraints { make in
             make.top.equalTo(searchBar.snp.bottom).offset(20)
@@ -49,7 +49,7 @@ final class ToDoListView: UIView, UIGestureRecognizerDelegate {
         }
     }
 
-    private func setUpLabel() {
+    private func setupLabel() {
         addSubview(label)
         label.text = "No Results Found"
         label.textAlignment = .center
