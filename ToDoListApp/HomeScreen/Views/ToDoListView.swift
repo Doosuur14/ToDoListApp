@@ -9,9 +9,9 @@ import UIKit
 
 final class ToDoListView: UIView, UIGestureRecognizerDelegate {
 
-    lazy var searchBar: UISearchBar = UISearchBar()
-    lazy var tableView: UITableView = UITableView()
-    lazy var label: UILabel = UILabel()
+    let searchBar: UISearchBar = UISearchBar()
+    let tableView: UITableView = UITableView()
+    let label: UILabel = UILabel()
 
     override init(frame: CGRect) {
         super.init(frame: frame)

@@ -96,6 +96,7 @@
 				DE7E9BCD2E5616D9003B4EE5 /* ToDoListApp */,
 				DE7E9BE42E5616DC003B4EE5 /* ToDoListAppTests */,
 				DE7E9BEE2E5616DC003B4EE5 /* ToDoListAppUITests */,
+				DED8D9522E57F48B0044BAF7 /* Frameworks */,
 				DE7E9BCC2E5616D9003B4EE5 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -108,6 +109,13 @@
 				DE7E9BEB2E5616DC003B4EE5 /* ToDoListAppUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		DED8D9522E57F48B0044BAF7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class AddTaskViewController: UIViewController {
+final class AddTaskViewController: UIViewController {
 
     var addTaskView: AddTaskView?
     let viewModel: CRUDTaskViewModel

@@ -16,7 +16,7 @@ protocol LocalDataSourceProtocol {
 
 }
 
-class LocalDataSource: LocalDataSourceProtocol {
+final class LocalDataSource: LocalDataSourceProtocol {
 
     static let shared = LocalDataSource()
 

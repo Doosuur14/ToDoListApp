@@ -8,7 +8,22 @@
 import Foundation
 import UIKit
 
-class TabBarController: UITabBarController,  UITabBarControllerDelegate {
+final class TabBarController: UITabBarController,  UITabBarControllerDelegate {
+
+    private let toDoListViewModel: ToDoListViewModel
+    private let crudTaskViewModel: CRUDTaskViewModel
+
+    init(toDoListViewModel: ToDoListViewModel = ToDoListViewModel(),
+         crudTaskViewModel: CRUDTaskViewModel = CRUDTaskViewModel()) {
+        self.toDoListViewModel = toDoListViewModel
+        self.crudTaskViewModel = crudTaskViewModel
+        super.init(nibName: nil, bundle: nil)
+        self.delegate = self
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +37,8 @@ class TabBarController: UITabBarController,  UITabBarControllerDelegate {
         let viewModel = ToDoListViewModel()
         let todoVC = UINavigationController(rootViewController: ToDoListViewController(viewModel: viewModel))
         todoVC.tabBarItem = UITabBarItem(title: "", image: UIImage(systemName: "plus"), tag: 0)
+        todoVC.tabBarItem.image?.accessibilityIdentifier = "plus"
+        todoVC.tabBarItem.accessibilityIdentifier = "addTab"
         viewControllers = [todoVC]
     }
 

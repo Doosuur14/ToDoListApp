@@ -8,12 +8,12 @@
 import UIKit
 import SnapKit
 
-class ToDoListTableViewCell: UITableViewCell {
+final class ToDoListTableViewCell: UITableViewCell {
 
-    private lazy var checkView : UIButton = UIButton(type: .system)
-    private lazy var titleLabel : UILabel = UILabel()
-    private lazy var descLabel: UILabel = UILabel()
-    private lazy var dateLabel: UILabel = UILabel()
+    private let  checkView : UIButton = UIButton(type: .system)
+    private let  titleLabel : UILabel = UILabel()
+    private let  descLabel: UILabel = UILabel()
+    private let  dateLabel: UILabel = UILabel()
     var onToggleCompleted: (() -> Void)?
     var onLongPress: ((IndexPath) -> Void)?
 

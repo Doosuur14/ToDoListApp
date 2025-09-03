@@ -9,12 +9,10 @@ import UIKit
 import SnapKit
 
 
-class AddTaskView: UIView {
+final class AddTaskView: UIView {
 
-    lazy var titleTextField: UITextField = UITextField()
-    lazy var descriptionTextView: UITextView = UITextView()
-
-
+     let titleTextField: UITextField = UITextField()
+     let descriptionTextView: UITextView = UITextView()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -36,6 +34,7 @@ class AddTaskView: UIView {
         titleTextField.font = .systemFont(ofSize: 28, weight: .bold)
         titleTextField.borderStyle = .none
         titleTextField.textColor = .label
+        titleTextField.accessibilityIdentifier = "TaskTitle"
         titleTextField.snp.makeConstraints { make in
             make.top.equalTo(safeAreaLayoutGuide).offset(16)
             make.leading.trailing.equalToSuperview().inset(16)
@@ -50,15 +49,14 @@ class AddTaskView: UIView {
         descriptionTextView.text = "Add details..."
         descriptionTextView.backgroundColor = .clear
         descriptionTextView.isScrollEnabled = true
+        descriptionTextView.accessibilityIdentifier = "TaskDescription"
         descriptionTextView.textContainerInset = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: 0)
         descriptionTextView.snp.makeConstraints { make in
             make.top.equalTo(titleTextField.snp.bottom).offset(12)
             make.leading.trailing.equalToSuperview().inset(16)
             make.bottom.equalTo(safeAreaLayoutGuide).inset(16)
         }
-
     }
-
 
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.textColor == .secondaryLabel {
@@ -73,5 +71,4 @@ class AddTaskView: UIView {
             textView.textColor = .secondaryLabel
         }
     }
-
 }

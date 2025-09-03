@@ -12,7 +12,7 @@ protocol RemoteDataSourceProtocol {
 
 }
 
-class RemoteDataSource: RemoteDataSourceProtocol {
+final class RemoteDataSource: RemoteDataSourceProtocol {
     static let shared = RemoteDataSource()
 
     func fetchContent(completion: @escaping (Result<[RemoteTodo], any Error>) -> Void) {

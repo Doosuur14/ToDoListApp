@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import CoreData
 
-class ToDoListViewModel {
+final class ToDoListViewModel {
     @Published var task: [ToDoEntity] = []
     var filteredTasks: [ToDoEntity] = []
     var remoteDataSource: RemoteDataSourceProtocol

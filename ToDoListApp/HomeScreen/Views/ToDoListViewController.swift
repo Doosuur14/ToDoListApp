@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ToDoListViewController: UIViewController, UITableViewDataSource,
+final class ToDoListViewController: UIViewController, UITableViewDataSource,
                               UITableViewDelegate, UISearchBarDelegate, EditTaskViewControllerDelegate{
 
     var toDoView: ToDoListView?

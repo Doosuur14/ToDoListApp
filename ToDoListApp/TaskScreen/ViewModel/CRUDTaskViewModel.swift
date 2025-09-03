@@ -7,7 +7,7 @@
 
 import Foundation
 
-class CRUDTaskViewModel {
+final class CRUDTaskViewModel {
 
     var localDataSource: LocalDataSourceProtocol
     var tasks: [ToDoEntity] = []

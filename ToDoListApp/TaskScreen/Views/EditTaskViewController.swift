@@ -3,7 +3,6 @@
 //  ToDoListApp
 //
 //  Created by Faki Doosuur Doris on 22.08.2025.
-//
 
 import UIKit
 import UIKit
@@ -13,10 +12,9 @@ protocol EditTaskViewControllerDelegate: AnyObject {
     func didUpdateTask(_ task: ToDoEntity?)
 }
 
-class EditTaskViewController: UIViewController {
+final class EditTaskViewController: UIViewController {
     var editTaskView: AddTaskView?
     let viewModel: ToDoListViewModel
-//    let viewModel: CRUDTaskViewModel
     let todo: ToDoEntity
 
     weak var delegate: EditTaskViewControllerDelegate?
@@ -59,6 +57,7 @@ class EditTaskViewController: UIViewController {
         navigationItem.rightBarButtonItem?.tintColor = .systemYellow
         navigationItem.leftBarButtonItem?.tintColor = .systemYellow
     }
+
 
     private func populateFields() {
         editTaskView?.titleTextField.text = todo.title ?? ""
